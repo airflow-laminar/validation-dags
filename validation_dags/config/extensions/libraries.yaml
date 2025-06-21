@@ -1,0 +1,30 @@
+# @package extensions.libraries
+
+defaults: []
+
+_target_: airflow_common_operators.LibraryList
+git:
+  - name: airflow-balancer
+    repo: git@github.com:airflow-laminar/airflow-balancer.git
+    branch: main
+  - name: airflow-common-operators
+    repo: git@github.com:airflow-laminar/common-operators.git
+    branch: main
+  - name: airflow-config
+    repo: git@github.com:airflow-laminar/airflow-config.git
+    branch: main
+  - name: airflow-ha
+    repo: git@github.com:airflow-laminar/airflow-ha.git
+    branch: main
+  - name: airflow-priority
+    repo: git@github.com:airflow-laminar/airflow-priority.git
+    branch: main
+  - name: airflow-pydantic
+    repo: git@github.com:airflow-laminar/airflow-pydantic.git
+    branch: main
+  - name: airflow-supervisor
+    repo: git@github.com:airflow-laminar/airflow-supervisor.git
+    branch: main
+  - name: supervisor-pydantic
+    repo: git@github.com:airflow-laminar/supervisor-pydantic.git
+    branch: main

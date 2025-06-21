@@ -1,0 +1,177 @@
+# @package _global_
+_target_: airflow_config.Configuration
+default_task_args:
+  _target_: airflow_config.TaskArgs
+  owner: laminar
+  email: [dev@paine.nyc]
+  email_on_failure: false
+  email_on_retry: false
+  retries: 0
+  depends_on_past: false
+
+default_dag_args:
+  _target_: airflow_config.DagArgs
+  start_date: ["2025-01-01", "America/New_York"]
+  catchup: false
+  max_active_runs: 1
+
+dags:
+  lam-generate-dags:
+    tags: ["generate", "utility"]
+    description: "Generate validation dags"
+    schedule: null
+  lam-clean-dags:
+    tags: ["lam", "cleanup", "utility"]
+    description: "Clean up validation dags"
+    schedule: "0 0 * * *"
+    max_active_tasks: 1
+    params: ${.tasks.clean_dags}
+    tasks:
+      clean_dags:
+        _target_: airflow_common_operators.DagCleanupTask
+  lam-clean-dags-noconfig:
+    tags: ["lam", "cleanup", "utility"]
+    description: "Clean up validation dags"
+    schedule: "0 12 * * *"
+    max_active_tasks: 1
+
+  lam-code-dags:
+    tags: ["lam", "code", "utility"]
+    description: "Pull dags repo"
+    schedule: "10,30,50 * * * *"
+    max_active_tasks: 1
+    tasks:
+      pull_dags:
+        _target_: airflow_pydantic.BashOperator
+        bash_command: cd $AIRFLOW_HOME/dag_src/airflow-laminar/validation-dags && git fetch --all && git reset origin/main --hard
+        queue: primary
+  lam-code-dags-noconfig:
+    tags: ["lam", "code", "utility"]
+    description: "Pull dags repo"
+    schedule: "0,20,40 * * * *"
+    max_active_tasks: 1
+
+  lam-code-libraries:
+    tags: ["lam", "code", "utility"]
+    description: "Clone repos"
+    schedule: "30 1 * * *"
+    max_active_tasks: 1
+
+  lam-test-ha-counter:
+    description: "Test HA counter"
+    tags: ["lam", "test", "utility"]
+    schedule: "@daily"
+    # tasks:
+    #   lam_get_count:
+    #     _target_: airflow_pydantic.PythonOperator
+    #     python_callable: validation_dags.test_ha_counter_foo._get_count
+    #   lam_ha:
+    #     _target_: airflow_pydantic.HighAvailabilityOperator
+    #     python_callable: validation_dags.test_ha_counter_foo._keep_counting
+    #     timeout: 30
+    #     poke_interval: 5
+    #     pass_trigger_kwargs: |
+    #       {"conf": '{"counter": {{ ti.xcom_pull(key="return_value", task_ids="lam-get-count") }} }'}
+    #     dependencies: [lam_get_count]
+  lam-test-ha-counter-noconfig:
+    description: "Test HA counter"
+    tags: ["lam", "test", "utility"]
+    schedule: "@daily"
+  lam-test-high-availability-noconfig:
+    description: "Test HA operator"
+    tags: ["lam", "test", "utility"]
+    schedule: "@daily"
+  # lam-test-high-availability:
+  #   description: "Test HA operator"
+  #   tags: ["lam", "test", "utility"]
+  #   schedule: "@daily"
+  #   tasks:
+  #     lam_pre:
+  #       _target_: airflow_pydantic.PythonOperator
+  #       python_callable: validation_dags.ha_foo._pre
+  #     lam_ha:
+  #       _target_: airflow_pydantic.HighAvailabilityOperator
+  #       python_callable: validation_dags.test_ha_foo._choose
+  #       runtime: 120,
+  #       maxretrigger: 2,
+  #       endtime: 23:00:00
+  #       timeout: 1000
+  #       poke_interval: 10
+  #       dependencies: [lam_pre]
+  #     lam_retrigger_fail:
+  #       _target_: airflow_pydantic.PythonOperator
+  #       python_callable: validation_dags.ha_foo._pre
+  #       dependencies: [lam_ha]
+
+  lam-test-supervisor:
+    description: "Test supervisor"
+    tags: ["lam", "test", "utility"]
+    schedule: "@daily"
+  lam-dummy:
+    description: "Dummy dag"
+    tags: ["lam", "test", "utility"]
+    schedule: "@daily"
+    tasks:
+      dummy_task:
+        _target_: airflow_pydantic.PythonOperator
+        python_callable: validation_dags.dummy_foo._dummy_foo
+  lam-dummy-noconfig:
+    description: "Dummy dag"
+    tags: ["lam", "test", "utility"]
+    schedule: "@daily"
+
+  lam-succeed-on-rerun:
+    description: "Succeed on rerun"
+    tags: ["lam", "P1", "test", "utility"]
+    schedule: "@once"
+    tasks:
+      fail-on-first-run:
+        _target_: airflow_pydantic.PythonOperator
+        python_callable: validation_dags.succeed_on_rerun_foo._fail_on_first_run
+  lam-succeed-on-rerun-noconfig:
+    description: "Succeed on rerun"
+    tags: ["lam", "P1", "test", "utility"]
+    schedule: "@once"
+
+  lam-example-generated-dag:
+    schedule: "@daily"
+    tags: ["lam", "test"]
+    tasks:
+      task_1:
+        _target_: airflow_pydantic.BashOperator
+        operator: airflow.operators.bash_operator.BashOperator
+        bash_command: "echo \"1\""
+      task_2:
+        _target_: airflow_pydantic.BashOperator
+        operator: airflow.operators.bash_operator.BashOperator
+        bash_command: "echo 2"
+        dependencies: [task_1]
+      task_3:
+        _target_: airflow_pydantic.BashOperator
+        operator: airflow.operators.bash_operator.BashOperator
+        bash_command: "echo 3"
+        dependencies: [task_1]
+  lam-example-generated-dag2:
+    schedule: "@daily"
+    tags: ["lam", "test"]
+    tasks:
+      task_1:
+        _target_: airflow_pydantic.BashOperator
+        operator: airflow.operators.bash_operator.BashOperator
+        bash_command: "echo \"1\""
+      task_2:
+        _target_: airflow_pydantic.BashOperator
+        operator: airflow.operators.bash_operator.BashOperator
+        bash_command: "echo 2"
+        dependencies: [task_1]
+      task_3:
+        _target_: airflow_pydantic.BashOperator
+        operator: airflow.operators.bash_operator.BashOperator
+        bash_command: "echo 3"
+        dependencies: [task_1]
+
+defaults:
+  - extensions/balancer@extensions.balancer
+  - extensions/libraries@extensions.libraries
+  - extensions/supervisor@extensions.supervisor
+  - extensions/dag_cleanup@extensions.dag_cleanup

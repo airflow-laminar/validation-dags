@@ -1,0 +1,9 @@
+# @package extensions.dag_cleanup
+
+defaults: []
+_target_: airflow_common_operators.models.DagCleanup
+delete_successful: true
+delete_failed: true
+mark_failed_as_successful: false
+max_dagruns: 10
+days_to_keep: 7
