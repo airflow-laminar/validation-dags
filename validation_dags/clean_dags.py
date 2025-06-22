@@ -1,14 +1,13 @@
-from airflow_common_operators.tasks.dag_clean import DagCleanupParams, create_cleanup_dag_runs
-from airflow_config import DAG, load_config
+from airflow_common_operators.tasks.dag_clean import DagCleanupTask
+from airflow_config import Dag, load_config
 
 config = load_config("config", "config")
 
-with DAG(
+
+with Dag(
     dag_id="lam-clean-dags-noconfig",
     config=config,
-    params=DagCleanupParams(),
+    params=DagCleanupTask,
 ) as dag:
-    create_cleanup_dag_runs(
-        task_id="lam-cleanup-dag-runs",
-        dag=dag,
-    )
+    task = DagCleanupTask(task_id="lam-cleanup-dag-runs")
+    task.instantiate(dag=dag)
