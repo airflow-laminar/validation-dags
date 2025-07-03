@@ -44,15 +44,22 @@ with DAG(
         "depends_on_past": False,
     },
 ) as dag:
-    lam_get_count = PythonOperator(task_id="lam_get_count", python_callable=_get_count, do_xcom_push=True)
-    # lam_get_count = PythonOperator(task_id="lam-get-count", python_callable=_get_count, do_xcom_push=True)
+    # lam_get_count = PythonOperator(task_id="lam_get_count", python_callable=_get_count, do_xcom_push=True)
+    lam_get_count = PythonOperator(task_id="lam-get-count", python_callable=_get_count, do_xcom_push=True)
+    # lam_ha = HighAvailabilityOperator(
+    #     poke_interval=5.0,
+    #     timeout=30.0,
+    #     python_callable=_keep_counting,
+    #     pass_trigger_kwargs={"conf": '{"counter": {{ ti.xcom_pull(key="return_value", task_ids="lam_get_count") }} }'},
+    #     # pass_trigger_kwargs={"conf": '{"counter": {{ ti.xcom_pull(key="return_value", task_ids="lam-get-count") }} }'},
+    #     task_id="lam_ha",
+    #     dag=dag,
+    # )
     lam_ha = HighAvailabilityOperator(
-        poke_interval=5.0,
-        timeout=30.0,
+        task_id="lam-ha",
+        timeout=30,
+        poke_interval=5,
         python_callable=_keep_counting,
-        pass_trigger_kwargs={"conf": '{"counter": {{ ti.xcom_pull(key="return_value", task_ids="lam_get_count") }} }'},
-        # pass_trigger_kwargs={"conf": '{"counter": {{ ti.xcom_pull(key="return_value", task_ids="lam-get-count") }} }'},
-        task_id="lam_ha",
-        dag=dag,
+        pass_trigger_kwargs={"conf": '{"counter": {{ ti.xcom_pull(key="return_value", task_ids="lam-get-count") }} }'},
     )
     lam_get_count >> lam_ha
