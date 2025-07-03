@@ -9,7 +9,7 @@ host = balancer_config.select_host(queue="primary")
 port = balancer_config.select_port(name="test-supervisor-port")
 
 with DAG(
-    dag_id="lam-test-supervisor",
+    dag_id="lam-test-supervisor-noconfig",
     schedule=timedelta(days=1),
     config=config,
 ) as dag:

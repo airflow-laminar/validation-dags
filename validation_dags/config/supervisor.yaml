@@ -1,0 +1,24 @@
+# @package extensions.supervisor
+
+defaults: []
+_target_: airflow_supervisor.SupervisorSSHAirflowConfiguration
+
+check_interval: 10
+check_timeout: 60
+cleanup: false
+command_prefix: . /var/lib/venvs/airflow/bin/activate
+endtime: 23:00:00
+maxretrigger: 5
+restart_on_initial: true
+restart_on_retrigger: false
+runtime: 360
+ssh_operator_args:
+  cmd_timeout: 63
+stop_on_exit: false
+working_dir: "/data/airflow/supervisor"
+
+program:
+  test:
+    _target_: airflow_supervisor.ProgramConfiguration
+    command: bash -c "sleep 3600; exit 0"
+

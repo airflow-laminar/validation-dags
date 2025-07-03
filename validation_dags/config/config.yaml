@@ -42,7 +42,7 @@ dags:
     max_active_tasks: 1
     tasks:
       pull_dags:
-        _target_: airflow_pydantic.BashOperator
+        _target_: airflow_pydantic.BashTask
         bash_command: cd $AIRFLOW_HOME/dag_src/airflow-laminar/validation-dags && git fetch --all && git reset origin/main --hard
         queue: primary
   lam-code-dags-noconfig:
@@ -61,18 +61,17 @@ dags:
     description: "Test HA counter"
     tags: ["lam", "test", "utility"]
     schedule: "@daily"
-    # tasks:
-    #   lam_get_count:
-    #     _target_: airflow_pydantic.PythonOperator
-    #     python_callable: validation_dags.test_ha_counter_foo._get_count
-    #   lam_ha:
-    #     _target_: airflow_pydantic.HighAvailabilityOperator
-    #     python_callable: validation_dags.test_ha_counter_foo._keep_counting
-    #     timeout: 30
-    #     poke_interval: 5
-    #     pass_trigger_kwargs: |
-    #       {"conf": '{"counter": {{ ti.xcom_pull(key="return_value", task_ids="lam-get-count") }} }'}
-    #     dependencies: [lam_get_count]
+    tasks:
+      lam_get_count:
+        _target_: airflow_pydantic.PythonTask
+        python_callable: validation_dags.test_ha_countdown_foo._get_count
+      lam_ha:
+        _target_: airflow_ha.HighAvailabilityTask
+        python_callable: validation_dags.test_ha_countdown_foo._keep_counting
+        timeout: 30
+        poke_interval: 5
+        pass_trigger_kwargs: {"conf": '{"counter": {{ ti.xcom_pull(key="return_value", task_ids="lam-get-count") }} }'}
+        dependencies: [lam_get_count]
   lam-test-ha-counter-noconfig:
     description: "Test HA counter"
     tags: ["lam", "test", "utility"]
@@ -81,29 +80,63 @@ dags:
     description: "Test HA operator"
     tags: ["lam", "test", "utility"]
     schedule: "@daily"
-  # lam-test-high-availability:
-  #   description: "Test HA operator"
-  #   tags: ["lam", "test", "utility"]
-  #   schedule: "@daily"
-  #   tasks:
-  #     lam_pre:
-  #       _target_: airflow_pydantic.PythonOperator
-  #       python_callable: validation_dags.ha_foo._pre
-  #     lam_ha:
-  #       _target_: airflow_pydantic.HighAvailabilityOperator
-  #       python_callable: validation_dags.test_ha_foo._choose
-  #       runtime: 120,
-  #       maxretrigger: 2,
-  #       endtime: 23:00:00
-  #       timeout: 1000
-  #       poke_interval: 10
-  #       dependencies: [lam_pre]
-  #     lam_retrigger_fail:
-  #       _target_: airflow_pydantic.PythonOperator
-  #       python_callable: validation_dags.ha_foo._pre
-  #       dependencies: [lam_ha]
+  lam-test-high-availability:
+    description: "Test HA operator"
+    tags: ["lam", "test", "utility"]
+    schedule: "@daily"
+    tasks:
+      lam_pre:
+        _target_: airflow_pydantic.PythonTask
+        python_callable: validation_dags.test_ha_foo._pre
+      lam_ha:
+        _target_: airflow_ha.HighAvailabilityTask
+        python_callable: validation_dags.test_ha_foo._choose
+        runtime: 120
+        maxretrigger: 2
+        endtime: 23:00:00
+        timeout: 1000
+        poke_interval: 10
+        dependencies: [lam_pre]
+      lam_retrigger_fail:
+        _target_: airflow_pydantic.PythonTask
+        python_callable: validation_dags.test_ha_foo._pre
+        dependencies: [lam_ha]
 
   lam-test-supervisor:
+    description: "Test supervisor"
+    tags: ["lam", "test", "utility"]
+    schedule: "@daily"
+    tasks:
+      supervisor:
+        _target_: airflow_supervisor.SupervisorSSHTask
+        cfg:
+          _target_: airflow_supervisor.SupervisorSSHAirflowConfiguration
+          check_interval: 10
+          check_timeout: 60
+          cleanup: false
+          command_prefix: . /var/lib/venvs/airflow/bin/activate
+          endtime: 23:00:00
+          maxretrigger: 5
+          restart_on_initial: true
+          restart_on_retrigger: false
+          runtime: 360
+          ssh_operator_args:
+            cmd_timeout: 63
+          stop_on_exit: false
+          working_dir: "/data/airflow/supervisor"
+          program:
+            test:
+              _target_: airflow_supervisor.ProgramConfiguration
+              command: bash -c "sleep 3600; exit 0"
+        host:
+          _target_: airflow_balancer.HostQuery
+          balancer: ${extensions.balancer}
+          queue: primary
+        port:
+          _target_: airflow_balancer.PortQuery
+          balancer: ${extensions.balancer}
+          name: test-supervisor-port
+  lam-test-supervisor-noconfig:
     description: "Test supervisor"
     tags: ["lam", "test", "utility"]
     schedule: "@daily"
@@ -113,7 +146,7 @@ dags:
     schedule: "@daily"
     tasks:
       dummy_task:
-        _target_: airflow_pydantic.PythonOperator
+        _target_: airflow_pydantic.PythonTask
         python_callable: validation_dags.dummy_foo._dummy_foo
   lam-dummy-noconfig:
     description: "Dummy dag"
@@ -126,7 +159,7 @@ dags:
     schedule: "@once"
     tasks:
       fail-on-first-run:
-        _target_: airflow_pydantic.PythonOperator
+        _target_: airflow_pydantic.PythonTask
         python_callable: validation_dags.succeed_on_rerun_foo._fail_on_first_run
   lam-succeed-on-rerun-noconfig:
     description: "Succeed on rerun"
@@ -138,17 +171,14 @@ dags:
     tags: ["lam", "test"]
     tasks:
       task_1:
-        _target_: airflow_pydantic.BashOperator
-        operator: airflow.operators.bash_operator.BashOperator
+        _target_: airflow_pydantic.BashTask
         bash_command: "echo \"1\""
       task_2:
-        _target_: airflow_pydantic.BashOperator
-        operator: airflow.operators.bash_operator.BashOperator
+        _target_: airflow_pydantic.BashTask
         bash_command: "echo 2"
         dependencies: [task_1]
       task_3:
-        _target_: airflow_pydantic.BashOperator
-        operator: airflow.operators.bash_operator.BashOperator
+        _target_: airflow_pydantic.BashTask
         bash_command: "echo 3"
         dependencies: [task_1]
   lam-example-generated-dag2:
@@ -156,22 +186,18 @@ dags:
     tags: ["lam", "test"]
     tasks:
       task_1:
-        _target_: airflow_pydantic.BashOperator
-        operator: airflow.operators.bash_operator.BashOperator
+        _target_: airflow_pydantic.BashTask
         bash_command: "echo \"1\""
       task_2:
-        _target_: airflow_pydantic.BashOperator
-        operator: airflow.operators.bash_operator.BashOperator
+        _target_: airflow_pydantic.BashTask
         bash_command: "echo 2"
         dependencies: [task_1]
       task_3:
-        _target_: airflow_pydantic.BashOperator
-        operator: airflow.operators.bash_operator.BashOperator
+        _target_: airflow_pydantic.BashTask
         bash_command: "echo 3"
         dependencies: [task_1]
 
 defaults:
-  - extensions/balancer@extensions.balancer
-  - extensions/libraries@extensions.libraries
-  - extensions/supervisor@extensions.supervisor
-  - extensions/dag_cleanup@extensions.dag_cleanup
+  - balancer@extensions.balancer
+  - libraries@extensions.libraries
+  - supervisor@extensions.supervisor
