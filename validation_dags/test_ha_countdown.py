@@ -46,7 +46,7 @@ with DAG(
 ) as dag:
     lam_get_count = PythonOperator(task_id="lam_get_count", python_callable=_get_count, do_xcom_push=True)
     # lam_get_count = PythonOperator(task_id="lam-get-count", python_callable=_get_count, do_xcom_push=True)
-    lam_ha = HighAvailabilitySensor(
+    lam_ha = HighAvailabilityOperator(
         poke_interval=5.0,
         timeout=30.0,
         python_callable=_keep_counting,
