@@ -38,7 +38,7 @@ with DAG(
     max_active_runs=1,
     catchup=False,
     tags=["lam", "test", "utility"],
-    dag_id="lam-test-ha-counter",
+    dag_id="lam-test-ha-counter-noconfig",
     default_args={
         "owner": "laminar",
         "email": ["dev@paine.nyc"],
