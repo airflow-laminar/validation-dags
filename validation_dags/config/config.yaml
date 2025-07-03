@@ -65,6 +65,7 @@ dags:
       lam_get_count:
         _target_: airflow_pydantic.PythonTask
         python_callable: validation_dags.test_ha_countdown_foo._get_count
+        do_xcom_push: true
       lam_ha:
         _target_: airflow_ha.HighAvailabilityTask
         python_callable: validation_dags.test_ha_countdown_foo._keep_counting
