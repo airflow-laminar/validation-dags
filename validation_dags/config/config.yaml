@@ -60,7 +60,7 @@ dags:
   lam-test-ha-counter:
     description: "Test HA counter"
     tags: ["lam", "test", "utility"]
-    schedule: "@daily"
+    schedule: "0 0 * * *"
     tasks:
       lam_get_count:
         _target_: airflow_pydantic.PythonTask
@@ -75,15 +75,11 @@ dags:
   lam-test-ha-counter-noconfig:
     description: "Test HA counter"
     tags: ["lam", "test", "utility"]
-    schedule: "@daily"
-  lam-test-high-availability-noconfig:
-    description: "Test HA operator"
-    tags: ["lam", "test", "utility"]
-    schedule: "@daily"
+    schedule: "0 12 * * *"
   lam-test-high-availability:
     description: "Test HA operator"
     tags: ["lam", "test", "utility"]
-    schedule: "@daily"
+    schedule: "0 12 * * *"
     tasks:
       lam_pre:
         _target_: airflow_pydantic.PythonTask
@@ -101,11 +97,15 @@ dags:
         _target_: airflow_pydantic.PythonTask
         python_callable: validation_dags.test_ha_foo._pre
         dependencies: [lam_ha]
+  lam-test-high-availability-noconfig:
+    description: "Test HA operator"
+    tags: ["lam", "test", "utility"]
+    schedule: "0 12 * * *"
 
   lam-test-supervisor:
     description: "Test supervisor"
     tags: ["lam", "test", "utility"]
-    schedule: "@daily"
+    schedule: "0 0 * * *"
     tasks:
       supervisor:
         _target_: airflow_supervisor.SupervisorSSHTask
@@ -139,11 +139,11 @@ dags:
   lam-test-supervisor-noconfig:
     description: "Test supervisor"
     tags: ["lam", "test", "utility"]
-    schedule: "@daily"
+    schedule: "0 12 * * *"
   lam-dummy:
     description: "Dummy dag"
     tags: ["lam", "test", "utility"]
-    schedule: "@daily"
+    schedule: "0 0 * * *"
     tasks:
       dummy_task:
         _target_: airflow_pydantic.PythonTask
@@ -151,7 +151,7 @@ dags:
   lam-dummy-noconfig:
     description: "Dummy dag"
     tags: ["lam", "test", "utility"]
-    schedule: "@daily"
+    schedule: "0 12 * * *"
 
   lam-succeed-on-rerun:
     description: "Succeed on rerun"
@@ -167,7 +167,7 @@ dags:
     schedule: "@once"
 
   lam-example-generated-dag:
-    schedule: "@daily"
+    schedule: "0 0 * * *"
     tags: ["lam", "test"]
     tasks:
       task_1:
@@ -182,7 +182,7 @@ dags:
         bash_command: "echo 3"
         dependencies: [task_1]
   lam-example-generated-dag2:
-    schedule: "@daily"
+    schedule: "0 1 * * *"
     tags: ["lam", "test"]
     tasks:
       task_1:
