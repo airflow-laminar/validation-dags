@@ -41,7 +41,7 @@ dags:
     schedule: "10,30,50 * * * *"
     max_active_tasks: 1
     tasks:
-      pull_dags:
+      pull-dags:
         _target_: airflow_pydantic.BashTask
         bash_command: cd $AIRFLOW_HOME/dag_src/airflow-laminar/validation-dags && git fetch --all && git reset origin/main --hard
         queue: primary
@@ -62,17 +62,17 @@ dags:
     tags: ["lam", "test", "utility"]
     schedule: "0 0 * * *"
     tasks:
-      lam_get_count:
+      lam-get-count:
         _target_: airflow_pydantic.PythonTask
         python_callable: validation_dags.test_ha_countdown_foo._get_count
         do_xcom_push: true
-      lam_ha:
+      lam-ha:
         _target_: airflow_ha.HighAvailabilityTask
         python_callable: validation_dags.test_ha_countdown_foo._keep_counting
         timeout: 30
         poke_interval: 5
-        pass_trigger_kwargs: {"conf": '{"counter": {{ ti.xcom_pull(key="return_value", task_ids="lam_get_count") }} }'}
-        dependencies: [lam_get_count]
+        pass_trigger_kwargs: {"conf": '{"counter": {{ ti.xcom_pull(key="return_value", task_ids="lam-get-count") }} }'}
+        dependencies: [lam-get-count]
   lam-test-ha-counter-noconfig:
     description: "Test HA counter"
     tags: ["lam", "test", "utility"]
@@ -82,10 +82,10 @@ dags:
     tags: ["lam", "test", "utility"]
     schedule: "0 12 * * *"
     tasks:
-      lam_pre:
+      lam-pre:
         _target_: airflow_pydantic.PythonTask
         python_callable: validation_dags.test_ha_foo._pre
-      lam_ha:
+      lam-ha:
         _target_: airflow_ha.HighAvailabilityTask
         python_callable: validation_dags.test_ha_foo._choose
         runtime: 120
@@ -93,11 +93,11 @@ dags:
         endtime: 23:00:00
         timeout: 1000
         poke_interval: 10
-        dependencies: [lam_pre]
-      lam_retrigger_fail:
+        dependencies: [lam-pre]
+      lam-retrigger-fail:
         _target_: airflow_pydantic.PythonTask
         python_callable: validation_dags.test_ha_foo._pre
-        dependencies: [lam_ha]
+        dependencies: [lam-ha]
   lam-test-high-availability-noconfig:
     description: "Test HA operator"
     tags: ["lam", "test", "utility"]
@@ -146,7 +146,7 @@ dags:
     tags: ["lam", "test", "utility"]
     schedule: "0 0 * * *"
     tasks:
-      dummy_task:
+      dummy-task:
         _target_: airflow_pydantic.PythonTask
         python_callable: validation_dags.dummy_foo._dummy_foo
   lam-dummy-noconfig:
@@ -171,32 +171,32 @@ dags:
     schedule: "0 0 * * *"
     tags: ["lam", "test"]
     tasks:
-      task_1:
+      task-1:
         _target_: airflow_pydantic.BashTask
         bash_command: "echo \"1\""
-      task_2:
+      task-2:
         _target_: airflow_pydantic.BashTask
         bash_command: "echo 2"
-        dependencies: [task_1]
-      task_3:
+        dependencies: [task-1]
+      task-3:
         _target_: airflow_pydantic.BashTask
         bash_command: "echo 3"
-        dependencies: [task_1]
+        dependencies: [task-1]
   lam-example-generated-dag2:
     schedule: "0 1 * * *"
     tags: ["lam", "test"]
     tasks:
-      task_1:
+      task-1:
         _target_: airflow_pydantic.BashTask
         bash_command: "echo \"1\""
-      task_2:
+      task-2:
         _target_: airflow_pydantic.BashTask
         bash_command: "echo 2"
-        dependencies: [task_1]
-      task_3:
+        dependencies: [task-1]
+      task-3:
         _target_: airflow_pydantic.BashTask
         bash_command: "echo 3"
-        dependencies: [task_1]
+        dependencies: [task-1]
 
 defaults:
   - balancer@extensions.balancer
