@@ -1,4 +1,5 @@
-# from airflow.operators.python import PythonOperator
+from airflow.operators.python import PythonOperator
+# from airflow.providers.standard.operators.python import PythonOperator
 # from airflow_config import DAG, load_config
 # from airflow_ha import HighAvailabilityOperator
 
@@ -26,7 +27,6 @@
 from datetime import datetime
 
 from airflow.models import DAG
-from airflow.providers.standard.operators.python import PythonOperator
 from airflow_ha.operator import HighAvailabilitySensor
 
 from validation_dags.test_ha_countdown_foo import _get_count, _keep_counting
@@ -48,12 +48,14 @@ with DAG(
         "depends_on_past": False,
     },
 ) as dag:
-    lam_get_count = PythonOperator(do_xcom_push=True, python_callable=_get_count, task_id="lam_get_count", dag=dag)
+    lam_get_count = PythonOperator(task_id="lam_get_count", python_callable=_get_count, do_xcom_push=True)
+    # lam_get_count = PythonOperator(task_id="lam-get-count", python_callable=_get_count, do_xcom_push=True)
     lam_ha = HighAvailabilitySensor(
         poke_interval=5.0,
         timeout=30.0,
         python_callable=_keep_counting,
         pass_trigger_kwargs={"conf": '{"counter": {{ ti.xcom_pull(key="return_value", task_ids="lam_get_count") }} }'},
+        # pass_trigger_kwargs={"conf": '{"counter": {{ ti.xcom_pull(key="return_value", task_ids="lam-get-count") }} }'},
         task_id="lam_ha",
         dag=dag,
     )
