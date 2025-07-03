@@ -28,7 +28,7 @@ dags:
     params: ${.tasks.clean_dags}
     tasks:
       clean_dags:
-        _target_: airflow_common_operators.DagCleanupTask
+        _target_: airflow_pydantic.DagCleanupTask
   lam-clean-dags-noconfig:
     tags: ["lam", "cleanup", "utility"]
     description: "Clean up validation dags"

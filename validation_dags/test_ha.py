@@ -1,9 +1,9 @@
 from datetime import time
 
-from airflow.operators.python import PythonOperator
-from airflow_common_operators import fail
+from airflow.providers.standard.operators.python import PythonOperator
 from airflow_config import DAG, load_config
 from airflow_ha import HighAvailabilityOperator
+from airflow_pydantic import fail
 
 from validation_dags.test_ha_foo import _choose, _pre
 

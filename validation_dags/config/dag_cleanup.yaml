@@ -1,7 +1,7 @@
 # @package extensions.dag_cleanup
 
 defaults: []
-_target_: airflow_common_operators.models.DagCleanup
+_target_: airflow_pydantic.DagCleanup
 delete_successful: true
 delete_failed: true
 mark_failed_as_successful: false

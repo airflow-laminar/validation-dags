@@ -1,5 +1,5 @@
-from airflow_common_operators.tasks.dag_clean import DagCleanupTask
 from airflow_config import Dag, load_config
+from airflow_pydantic import DagCleanupTask
 
 config = load_config("config", "config")
 
