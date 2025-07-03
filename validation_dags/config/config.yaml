@@ -70,7 +70,7 @@ dags:
         python_callable: validation_dags.test_ha_countdown_foo._keep_counting
         timeout: 30
         poke_interval: 5
-        pass_trigger_kwargs: {"conf": '{"counter": {{ ti.xcom_pull(key="return_value", task_ids="lam-get-count") }} }'}
+        pass_trigger_kwargs: {"conf": '{"counter": {{ ti.xcom_pull(key="return_value", task_ids="lam_get_count") }} }'}
         dependencies: [lam_get_count]
   lam-test-ha-counter-noconfig:
     description: "Test HA counter"
