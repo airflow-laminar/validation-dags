@@ -1,5 +1,10 @@
 # @package _global_
 _target_: airflow_config.Configuration
+defaults:
+  - balancer@extensions.balancer
+  - libraries@extensions.libraries
+  - supervisor@extensions.supervisor
+
 default_task_args:
   _target_: airflow_config.TaskArgs
   owner: laminar
@@ -56,6 +61,12 @@ dags:
     description: "Clone repos"
     schedule: "30 1 * * *"
     max_active_tasks: 1
+    tasks:
+      pull-libraries:
+        _target_: airflow_common_operators.LibraryListTask
+        git: ${extensions.libraries.git}
+        pip: [] # ${extensions.libraries.pip}
+        queue: primary
 
   lam-test-ha-counter:
     description: "Test HA counter"
@@ -197,8 +208,3 @@ dags:
         _target_: airflow_pydantic.BashTask
         bash_command: "echo 3"
         dependencies: [task-1]
-
-defaults:
-  - balancer@extensions.balancer
-  - libraries@extensions.libraries
-  - supervisor@extensions.supervisor

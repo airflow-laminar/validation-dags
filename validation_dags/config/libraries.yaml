@@ -7,24 +7,32 @@ git:
   - name: airflow-balancer
     repo: git@github.com:airflow-laminar/airflow-balancer.git
     branch: main
+    dir: ~/
   - name: airflow-common-operators
     repo: git@github.com:airflow-laminar/common-operators.git
     branch: main
+    dir: ~/
   - name: airflow-config
     repo: git@github.com:airflow-laminar/airflow-config.git
     branch: main
+    dir: ~/
   - name: airflow-ha
     repo: git@github.com:airflow-laminar/airflow-ha.git
     branch: main
+    dir: ~/
   - name: airflow-priority
     repo: git@github.com:airflow-laminar/airflow-priority.git
     branch: main
+    dir: ~/
   - name: airflow-pydantic
     repo: git@github.com:airflow-laminar/airflow-pydantic.git
     branch: main
+    dir: ~/
   - name: airflow-supervisor
     repo: git@github.com:airflow-laminar/airflow-supervisor.git
     branch: main
+    dir: ~/
   - name: supervisor-pydantic
     repo: git@github.com:airflow-laminar/supervisor-pydantic.git
     branch: main
+    dir: ~/
