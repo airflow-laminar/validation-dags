@@ -32,10 +32,8 @@ classifiers = [
 dependencies = [
     "apache-airflow>=2.10.3",
     "apache-airflow-providers-ssh",
-    "airflow-balancer",
-    "airflow-common-operators",
-    "airflow-config",
-    "airflow-supervisor",
+    "apache-airflow-providers-standard",
+    "airflow-laminar>=1.14",
 ]
 
 [project.optional-dependencies]
