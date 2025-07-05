@@ -26,19 +26,36 @@ dags:
     description: "Generate validation dags"
     schedule: null
   lam-clean-dags:
-    tags: ["lam", "cleanup", "utility"]
-    description: "Clean up validation dags"
+    tags: ["lam", "clean", "utility"]
+    description: "Clean validation dags"
     schedule: "0 0 * * *"
     max_active_tasks: 1
-    params: ${.tasks.clean_dags}
+    params: ${.tasks.clean-dags}
     tasks:
-      clean_dags:
-        _target_: airflow_pydantic.DagCleanupTask
+      clean-dags:
+        _target_: airflow_pydantic.DagCleanTask
   lam-clean-dags-noconfig:
-    tags: ["lam", "cleanup", "utility"]
-    description: "Clean up validation dags"
+    tags: ["lam", "clean", "utility"]
+    description: "Clean validation dags"
     schedule: "0 12 * * *"
     max_active_tasks: 1
+  lam-clean-journalctl:
+    tags: ["lam", "clean", "utility"]
+    description: "Clean journalctl"
+    schedule: "0 0 * * *"
+    max_active_tasks: 1
+    params: ${.tasks.clean-journalctl}
+    tasks:
+      clean-journalctl:
+        _target_: airflow_common_operators.JournalctlCleanOperator
+        sudo: true
+        days: 2
+  lam-clean-journalctl-noconfig:
+    tags: ["lam", "clean", "utility"]
+    description: "Clean journalctl"
+    schedule: "0 12 * * *"
+    max_active_tasks: 1
+
 
   lam-code-dags:
     tags: ["lam", "code", "utility"]
