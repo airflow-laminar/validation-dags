@@ -139,10 +139,13 @@ js/dist
 js/lib
 js/node_modules
 js/*.tgz
+validation_dags/extension
 
 # Jupyter
 .ipynb_checkpoints
 .autoversion
+!validation_dags/extension/validation_dags.json
+!validation_dags/extension/install.json
 validation_dags/nbextension
 validation_dags/labextension
 
