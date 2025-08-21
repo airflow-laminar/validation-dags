@@ -2,9 +2,6 @@
 
 defaults: []
 _target_: airflow_common_operators.LibraryList
-
-parallel: true
-
 git:
   - name: airflow-balancer
     repo: git@github.com:airflow-laminar/airflow-balancer.git

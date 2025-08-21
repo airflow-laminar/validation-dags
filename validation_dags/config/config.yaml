@@ -83,6 +83,7 @@ dags:
         _target_: airflow_common_operators.LibraryListTask
         git: ${extensions.libraries.git}
         pip: [] # ${extensions.libraries.pip}
+        parallel: true
         command_prefix: source /var/lib/venvs/airflow/bin/activate
         queue: primary
 
