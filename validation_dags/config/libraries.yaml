@@ -7,8 +7,8 @@ git:
     repo: git@github.com:airflow-laminar/airflow-balancer.git
     branch: main
     dir: /mnt/home/airflow/
-  - name: airflow-common-operators
-    repo: git@github.com:airflow-laminar/common-operators.git
+  - name: airflow-common
+    repo: git@github.com:airflow-laminar/airflow-common.git
     branch: main
     dir: /mnt/home/airflow/
   - name: airflow-config
