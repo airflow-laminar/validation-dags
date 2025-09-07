@@ -47,7 +47,7 @@ dags:
     params: ${.tasks.clean-journalctl}
     tasks:
       clean-journalctl:
-        _target_: airflow_common_operators.JournalctlCleanOperator
+        _target_: airflow_common.JournalctlCleanOperator
         sudo: true
         days: 2
   lam-clean-journalctl-noconfig:
@@ -80,7 +80,7 @@ dags:
     max_active_tasks: 1
     tasks:
       pull-libraries:
-        _target_: airflow_common_operators.LibraryListTask
+        _target_: airflow_common.LibraryListTask
         git: ${extensions.libraries.git}
         pip: [] # ${extensions.libraries.pip}
         parallel: true

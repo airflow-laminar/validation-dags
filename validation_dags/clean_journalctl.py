@@ -1,4 +1,4 @@
-from airflow_common_operators import JournalctlClean, JournalctlCleanTaskArgs
+from airflow_common import JournalctlClean, JournalctlCleanTaskArgs
 from airflow_config import Dag, load_config
 
 config = load_config("config", "config")
