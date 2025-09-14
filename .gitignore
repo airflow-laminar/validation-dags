@@ -146,6 +146,7 @@ validation_dags/extension
 # Jupyter
 .ipynb_checkpoints
 .autoversion
+Untitled*.ipynb
 !validation_dags/extension/validation_dags.json
 !validation_dags/extension/install.json
 validation_dags/nbextension
