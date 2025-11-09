@@ -9,7 +9,6 @@ description = "DAGs to validate airflow-laminar packages"
 readme = "README.md"
 license = { text = "Apache-2.0" }
 version = "0.1.0"
-<<<<<<< before updating
 requires-python = ">=3.11"
 keywords = [
     "airflow",
@@ -17,11 +16,7 @@ keywords = [
     "dag",
     "dags",
 ]
-=======
-requires-python = ">=3.10"
-keywords = []
 
->>>>>>> after updating
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Programming Language :: Python",
