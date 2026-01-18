@@ -5,7 +5,7 @@ from airflow_supervisor import SupervisorSSH
 
 config = load_config("config", "config")
 balancer_config = config.extensions["balancer"]
-host = balancer_config.select_host(queue="primary")
+host = balancer_config.select_host(queue="nuc2")
 port = balancer_config.select_port(name="test-supervisor-port")
 
 with DAG(

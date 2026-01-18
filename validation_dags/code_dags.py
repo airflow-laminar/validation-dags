@@ -13,5 +13,5 @@ with DAG(
         task_id="pull-dags-repo",
         bash_command="git fetch --all && git reset origin/main --hard",
         cwd=path.join(environ.get("AIRFLOW_HOME", "/var/lib/airflow"), "dag_src", "airflow-laminar", "validation-dags"),
-        queue="primary",
+        queue="nuc2",
     )

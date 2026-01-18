@@ -3,13 +3,13 @@
 _target_: airflow_balancer.BalancerConfiguration
 default_username: timkpaine
 default_key_file: /home/airflow/.ssh/id_rsa
-primary_queue: primary
+primary_queue: nuc2
 secondary_queue: workers
 hosts:
   - name: nuc2
     os: ubuntu
     size: 32
-    queues: [primary]
+    queues: [nuc2]
     tags: []
 
 ports:

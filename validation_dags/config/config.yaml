@@ -16,7 +16,7 @@ default_task_args:
 
 default_dag_args:
   _target_: airflow_config.DagArgs
-  start_date: ["2025-01-01", "America/New_York"]
+  start_date: ["2026-01-01", "America/New_York"]
   catchup: false
   max_active_runs: 1
 
@@ -66,7 +66,7 @@ dags:
       pull-dags:
         _target_: airflow_pydantic.BashTask
         bash_command: cd $AIRFLOW_HOME/dag_src/airflow-laminar/validation-dags && git fetch --all && git reset origin/main --hard
-        queue: primary
+        queue: nuc2
   lam-code-dags-noconfig:
     tags: ["lam", "code", "utility"]
     description: "Pull dags repo"
@@ -85,7 +85,7 @@ dags:
         pip: [] # ${extensions.libraries.pip}
         parallel: true
         command_prefix: source /var/lib/venvs/airflow/bin/activate
-        queue: primary
+        queue: nuc2
 
   lam-test-ha-counter:
     description: "Test HA counter"
@@ -162,7 +162,7 @@ dags:
         host:
           _target_: airflow_balancer.HostQuery
           balancer: ${extensions.balancer}
-          queue: primary
+          queue: nuc2
         port:
           _target_: airflow_balancer.PortQuery
           balancer: ${extensions.balancer}
