@@ -13,4 +13,4 @@ with DAG(
     schedule=timedelta(days=1),
     config=config,
 ) as dag:
-    supervisor = SupervisorSSH(dag=dag, cfg=config.extensions["supervisor"], host=host.override(username="airflow"), port=port)
+    supervisor = SupervisorSSH(dag=dag, cfg=config.extensions["supervisor"], host=host, port=port)
