@@ -141,14 +141,12 @@ js/node_modules
 js/test-results
 js/playwright-report
 js/*.tgz
-validation_dags/extension
 
 # Jupyter
 .ipynb_checkpoints
 .autoversion
 Untitled*.ipynb
-!validation_dags/extension/validation_dags.json
-!validation_dags/extension/install.json
+validation_dags/extension
 validation_dags/nbextension
 validation_dags/labextension
 
@@ -157,3 +155,7 @@ validation_dags/labextension
 
 # Rust
 target
+
+# Hydra
+outputs/
+multirun/
