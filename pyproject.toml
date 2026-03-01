@@ -88,6 +88,7 @@ branch = true
 omit = [
     "validation_dags/tests/integration/",
 ]
+
 [tool.coverage.report]
 exclude_also = [
     "raise NotImplementedError",
