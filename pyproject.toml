@@ -14,16 +14,12 @@ readme = "README.md"
 license = { text = "Apache-2.0" }
 version = "0.1.0"
 requires-python = ">=3.11"
-<<<<<<< before updating
 keywords = [
     "airflow",
     "scheduler",
     "dag",
     "dags",
 ]
-=======
-keywords = []
->>>>>>> after updating
 
 classifiers = [
     "Development Status :: 3 - Alpha",
