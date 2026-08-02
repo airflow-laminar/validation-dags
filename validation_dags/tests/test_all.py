@@ -1,9 +1,3 @@
-<<<<<<< before updating
-=======
-from validation_dags import *
-
-
->>>>>>> after updating
 def test_all():
     from airflow_balancer.testing import pools
 
