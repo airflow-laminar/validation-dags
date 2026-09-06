@@ -38,7 +38,7 @@ dependencies = [
     "apache-airflow-providers-ssh",
     "apache-airflow-providers-standard",
     "airflow-laminar>=1.14.3",
-    "paramiko<4",
+    "paramiko<6",
     "structlog<26.2.0",
 ]
 
