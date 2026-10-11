@@ -1,6 +1,6 @@
 from os import environ, path
 
-from airflow.operators.bash import BashOperator
+from airflow.providers.standard.operators.bash import BashOperator
 from airflow_config import DAG, load_config
 
 config = load_config("config", "config")

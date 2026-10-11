@@ -7,5 +7,6 @@ class TestConfig:
         with pools():
             config = load_config("config", "config")
             assert config
+            assert config.extensions is not None
             assert "balancer" in config.extensions
             assert "libraries" in config.extensions

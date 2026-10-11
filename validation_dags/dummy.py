@@ -1,4 +1,4 @@
-from airflow.operators.python import PythonOperator
+from airflow.providers.standard.operators.python import PythonOperator
 from airflow_config import DAG, load_config
 
 from validation_dags.dummy_foo import _dummy_foo
