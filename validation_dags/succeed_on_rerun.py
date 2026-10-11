@@ -1,4 +1,4 @@
-from airflow.operators.python import PythonOperator
+from airflow.providers.standard.operators.python import PythonOperator
 from airflow_config import DAG, load_config
 
 from validation_dags.succeed_on_rerun_foo import _fail_on_first_run
